@@ -25,10 +25,12 @@ while True:
         # if the number of messages is below 10,000 store it,
         # if the number of messages is above 10,000, archive the file.
             if len(messages) < 10:
+                messages.append(event)
                 # store
 
             else:
                 # write to file and post to archives channel
+                archive(messages)
 
 
     # wait one second.
