@@ -2,18 +2,23 @@ from slackclient import SlackClient
 import time
 
 # define our archive function
-def archive(messages):
+def archive(messages, channel, slack):
     """
     Archives the provided messages into an HTML file, formatting them correctly,
     which is then posted to slack into the #archives channel.
 
     Args:
-        slack: Passing through our
         messages: A list of messages to archive.
+        channel: A specific channel within the Slack team.
+        slack: Passing through our slack variable.
     """
     # Append each message's text to a string.
+    output = ""
+    for message in messages:
+        output += message.text
 
     # Submit string to slack.
+    slack.api_call("files.upload", content=output, filetype="html", filename="test.html", title="test", channels="archives")
 
 
 
