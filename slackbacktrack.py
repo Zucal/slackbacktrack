@@ -4,14 +4,16 @@ import time
 # define our archive function
 def archive(messages):
     """
-    Archives the provided messages into a file, formatting them correctly,
+    Archives the provided messages into an HTML file, formatting them correctly,
     which is then posted to slack into the #archives channel.
 
     Args:
         slack: Passing through our
         messages: A list of messages to archive.
     """
-    pass
+    # Append each message's text to a string.
+
+    # Submit string to slack.
 
 
 
@@ -54,7 +56,7 @@ def main():
 
         # wait one second.
         time.sleep(1)
-        
+
 
 
 # Fancy way of running our program, which now begins here.
