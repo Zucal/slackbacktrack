@@ -64,6 +64,7 @@ def main():
                     print("archiving...")
                     # write to file and post to archives channel
                     archive(messages, '#general', slack)
+                    messages.clear()
 
         # wait one second.
         time.sleep(1)
