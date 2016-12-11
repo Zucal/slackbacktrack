@@ -44,6 +44,7 @@ def main():
     while True:
         # read the events that slack has sent us.
         events = slack.rtm_read()
+        print('tick')
 
         for event in events:
             print(event)
@@ -55,10 +56,12 @@ def main():
                 # if the number of messages is below 10,000 store it,
                 # if the number of messages is above 10,000, archive the file.
                 if len(messages) < 2:
+                    print("appending...")
                     # append the event to our messages list.
                     messages.append(event)
 
                 else:
+                    print("archiving...")
                     # write to file and post to archives channel
                     archive(messages, '#general', slack)
 
