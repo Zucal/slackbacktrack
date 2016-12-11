@@ -2,6 +2,7 @@ from slackclient import SlackClient
 import time
 import sys
 
+
 # define our archive function
 def archive(messages, channel, slack):
     """
@@ -16,11 +17,11 @@ def archive(messages, channel, slack):
     # Append each message's text to a string.
     output = ""
     for message in messages:
-        output += message.text
+        output += message['text']
 
     # Submit string to slack.
-    slack.api_call("files.upload", content=output, filetype="html", filename="test.html", title="test", channels="archives")
-
+    slack.api_call("files.upload", content=output, filetype="html",
+                filename="test.html", title="test", channels="messages")
 
 
 # define our main function
@@ -45,24 +46,24 @@ def main():
         events = slack.rtm_read()
 
         for event in events:
+            print(event)
 
             # Wanna make sure the event type is correct, we should probably also
             # record message edits and deletes too.
-            if event['type']  == "message":
+            if event['type'] == "message":
 
-            # if the number of messages is below 10,000 store it,
-            # if the number of messages is above 10,000, archive the file.
-                if len(messages) < 10:
+                # if the number of messages is below 10,000 store it,
+                # if the number of messages is above 10,000, archive the file.
+                if len(messages) < 2:
                     # append the event to our messages list.
                     messages.append(event)
 
                 else:
                     # write to file and post to archives channel
-                    archive(messages)
+                    archive(messages, '#general', slack)
 
         # wait one second.
         time.sleep(1)
-
 
 
 # Fancy way of running our program, which now begins here.
