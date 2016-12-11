@@ -1,5 +1,6 @@
 from slackclient import SlackClient
 import time
+import sys
 
 # define our archive function
 def archive(messages, channel, slack):
@@ -29,7 +30,7 @@ def main():
     """
 
     # setup slack API token and create a client.
-    api_token = "foo"
+    api_token = sys.argv[1]
     slack = SlackClient(api_token)
 
     # create a connection with Slack.
