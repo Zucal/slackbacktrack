@@ -5,6 +5,7 @@ import logging
 
 # define our file_message_count function
 def file_message_count(for_channel):
+
     """
     For a given channel (provided by the argument `for_channel`), read our temporary
     file for holding messages and find out how many messages it currently has.
@@ -15,6 +16,7 @@ def file_message_count(for_channel):
     Returns:
         An integer, of how many messages are in the current temporary file.
     """
+    temporary_message_file = open(for_channel + ".html", "r")
 
 def record_message(message):
     """
