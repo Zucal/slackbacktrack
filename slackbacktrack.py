@@ -1,23 +1,41 @@
 from slackclient import SlackClient
 import time
 import sys
+import logging
+
+# define our file_message_count function
+def file_message_count(for_channel):
+    """
+    For a given channel (provided by the argument `for_channel`), read our temporary
+    file for holding messages and find out how many messages it currently has.
+
+    Args:
+        for_channel: A channel to find a file for ("general", "stuff", etc)
+
+    Returns:
+        An integer, of how many messages are in the current temporary file.
+    """
+
+def record_message(message):
+    """
+    For a given message (provided by the argument `message`), record it to
+    its appropriate temporary file.
+
+    Args:
+        message: The message to append at the bottom of the file.
+    """
 
 
 # define our archive function
-def archive(messages, channel, slack):
+def archive_messages(channel, slack):
     """
-    Archives the provided messages into an HTML file, formatting them correctly,
-    which is then posted to slack into the #archives channel.
+    Posts the current messages holding file for a particular channel into slack,
+    then empties the file.
 
     Args:
-        messages: A list of messages to archive.
         channel: A specific channel within the Slack team.
         slack: Passing through our slack variable.
     """
-    # Append each message's text to a string.
-    output = ""
-    for message in messages:
-        output += message['text']
 
     # Submit string to slack.
     slack.api_call("files.upload", content=output, filetype="html",
@@ -47,9 +65,6 @@ def main():
         else:
             logging.error("{} Fatal error: {}".format(time.strftime("%Y-%m-%d %H:%M:%S"), "Could not connect"))
 
-    # create a list of messages.
-    messages = []
-
     # loop inside this forever.
     while True:
         # read the events that slack has sent us.
@@ -58,20 +73,17 @@ def main():
         for event in events:
             print(event)
 
-            # Wanna make sure the event type is correct, we should probably also
-            # record message edits and deletes too.
+            # Wanna make sure the event type is a message. We don't want to record
+            # silly things like typing statuses.
             if event['type'] == "message":
 
-                # if the number of messages is below 10,000 store it,
-                # if the number of messages is above 10,000, archive the file.
-                if len(messages) < 2:
-                    # append the event to our messages list.
-                    messages.append(event)
+                # Record the message in its correct file
+                record_message(event)
 
-                else:
-                    # write to file and post to archives channel
-                    archive(messages, '#general', slack)
-                    messages.clear()
+                # If the message count of the file exceeds 10, we should archive
+                # it to slack.
+                if file_message_count(event['channel']) == 10:
+                    archive_messages(event['channel'])
 
             # We should attempt to reconnect if we get this message
             if event['type'] == "goodbye":
